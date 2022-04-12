@@ -16,7 +16,6 @@ class Login extends Component {
   constructor() {
     super();
     this.state = {
-      username: "",
       email: "",
       password: "",
       error: "",
@@ -35,11 +34,10 @@ class Login extends Component {
   clickSubmit = (event) => {
     this.setState({ loading: true });
     event.preventDefault();
-    const { email, password,username } = this.state;
+    const { email, password } = this.state;
     const user = {
       email,
-      password,
-      username
+      password
     };
     console.log(user);
     //get the route from backend
@@ -70,7 +68,6 @@ class Login extends Component {
   };
   render() {
     const {
-      username,
       email,
       password,
       // error,
@@ -99,17 +96,6 @@ class Login extends Component {
             <Avatar style={avatarStyle}>P</Avatar>
             <h2>SIGN IN</h2>
           </Grid>
-          <TextField
-            id="outlined-basic"
-            label="Username"
-            variant="outlined"
-            name="username"
-            onChange={this.handleChange("username")}
-            value={username}
-            style={styleForm}
-            fullWidth
-            required
-          />
           <TextField
             id="outlined-basic"
             label="Email"
