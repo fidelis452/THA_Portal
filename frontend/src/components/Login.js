@@ -1,8 +1,16 @@
 import React, { Component } from "react";
-import {Routes,Route } from "react-router-dom";
-import {Avatar, Grid, Paper, Typography, TextField, Link, Button} from "@material-ui/core";
-import Checkbox from '@material-ui/core/Checkbox';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Routes, Route } from "react-router-dom";
+import {
+  Avatar,
+  Grid,
+  Paper,
+  Typography,
+  TextField,
+  Link,
+  Button,
+} from "@material-ui/core";
+import Checkbox from "@material-ui/core/Checkbox";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 class Login extends Component {
   constructor() {
@@ -15,10 +23,11 @@ class Login extends Component {
       redirectToHome: false,
       loading: false,
     };
+    // bind
+    this.handleChange = this.handleChange.bind(this);
+    this.clickSubmit = this.clickSubmit.bind(this);
   }
-  //with the syntax as an array we dont an onclick func for each input
-  //takes in a parameter and an event
-  //set the value to have it as data to send to backend
+
   handleChange = (email) => (event) => {
     this.setState({ error: "" });
     this.setState({ [email]: event.target.value });
@@ -26,11 +35,13 @@ class Login extends Component {
   clickSubmit = (event) => {
     this.setState({ loading: true });
     event.preventDefault();
-    const { email, password } = this.state;
+    const { email, password,username } = this.state;
     const user = {
       email,
       password,
+      username
     };
+    console.log(user);
     //get the route from backend
     fetch("http://localhost:5000/login", {
       method: "POST",
@@ -58,49 +69,93 @@ class Login extends Component {
       });
   };
   render() {
-    const { username, email,password, 
-        // error, 
-        redirectToHome, 
-        // loading
-     } = this.state;
+    const {
+      username,
+      email,
+      password,
+      // error,
+      redirectToHome,
+      // loading
+    } = this.state;
     if (redirectToHome) {
-      return <div>
-        <Routes>
-        <Route path="/" element={<Login />} />
-      </Routes>
-      </div>;
+      return (
+        <div>
+          <Routes>
+            <Route path="/" element={<Login />} />
+          </Routes>
+        </div>
+      );
     }
-    const stylePaper={padding: 20, margin: "40px auto", width: "350px"}
-    const avatarStyle={background: "blue"}
-    const styleForm={padding:10,}
-    const btnStyle={padding: 10}
-    const styleTypo={padding:20}
+    const stylePaper = { padding: 20, margin: "40px auto", width: "350px" };
+    const avatarStyle = { background: "blue" };
+    const styleForm = { padding: 10 };
+    const btnStyle = { padding: 10 };
+    const styleTypo = { padding: 20 };
     return (
-        <Grid>
-        <Paper elevation={10} style={stylePaper}>
-            <Grid align="center" justifyContent="flex">
-                <Avatar style={avatarStyle}>P</Avatar>
-                <h2>SIGN IN</h2>
+      <Grid>
+        <Paper elevation={10} style={stylePaper} >
+          <Grid container  justifyContent="center">
+          <Grid  align="center" justifyContent="center">
+            <Avatar style={avatarStyle}>P</Avatar>
+            <h2>SIGN IN</h2>
+          </Grid>
+          <TextField
+            id="outlined-basic"
+            label="Username"
+            variant="outlined"
+            name="username"
+            onChange={this.handleChange("username")}
+            value={username}
+            style={styleForm}
+            fullWidth
+            required
+          />
+          <TextField
+            id="outlined-basic"
+            label="Email"
+            type="email"
+            variant="outlined"
+            name="email"
+            onChange={this.handleChange("email")}
+            value={email}
+            style={styleForm}
+            fullWidth
+            required
+          />
+          <TextField
+            id="outlined-basic"
+            label="Password"
+            type="password"
+            onChange={this.handleChange("password")}
+            value={password}
+            name="password"
+            variant="outlined"
+            style={styleForm}
+            fullWidth
+            required
+          />
+          <FormControlLabel
+            control={<Checkbox name="checkedB" color="primary" />}
+            label="Remember Me"
+          />
+          <Button
+            variant="contained"
+            color="primary"
+            style={btnStyle}
+            type="button"
+            onClick={this.clickSubmit}
+            fullWidth
+          >
+            SIGN IN
+          </Button>
+          <Typography align="center" style={styleTypo}>
+            <Link href="#">Forgot Password</Link>
+          </Typography>
+
             </Grid>
-            <TextField id="outlined-basic" label="Username" variant="outlined"  
-            onChange={this.handleChange("username")} value={username}style={styleForm} fullWidth required/>
-            <TextField id="outlined-basic" label="Email" variant="outlined" 
-            onChange={this.handleChange("email")} value={email} style={styleForm} fullWidth required/>
-            <TextField id="outlined-basic" label="Password" type="password" 
-            onChange={this.handleChange("password")} value={password} variant="outlined" style={styleForm} fullWidth required/>
-            <FormControlLabel
-    control={
-      <Checkbox name="checkedB" color="primary" />
-    }
-    label="Remember Me"
-  />
-  <Button variant="contained" color="primary" style={btnStyle} type="button"
-            onClick={this.clickSubmit} fullWidth>SIGN IN</Button>
-  <Typography align="center" style={styleTypo}>
-      <Link href="#">Forgot Password</Link>
-    </Typography>
-    </Paper>
-</Grid>
+    
+        </Paper>
+      </Grid>
     );
   }
 }
